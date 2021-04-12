@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import './screens/auth_screen.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
@@ -34,7 +36,13 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
           )),
-      home: MyHomePage(),
+      home: StreamBuilder(stream: FirebaseAuth.instance.onAuthStateChanged, builder: (ctx, userSnapshot) {
+        if (userSnapshot.hasData) {
+          return MyHomePage();
+        }
+        return AuthScreen();
+      }),
+ 
     );
   }
 }
@@ -112,10 +120,31 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(
           'Personal Expenses',
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => _startAddNewTransaction(context),
+        actions:[
+          DropdownButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).primaryIconTheme.color,
+            ),
+            items: [
+              DropdownMenuItem(
+                child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.exit_to_app_outlined),
+                      SizedBox(width: 4),
+                      Text('Logout'),
+                    ],
+                  ),
+                ),
+                value: 'logout',
+              ),
+            ],
+            onChanged: (itemIdentifier) {
+              if (itemIdentifier == 'logout') {
+                FirebaseAuth.instance.signOut();
+              }
+            },
           ),
         ],
       ),
