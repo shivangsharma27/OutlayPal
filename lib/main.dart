@@ -6,6 +6,7 @@ import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
 import './widgets/chart.dart';
 import './models/transaction.dart';
+import './widgets/chart_monthly.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,13 +37,14 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
           )),
-      home: StreamBuilder(stream: FirebaseAuth.instance.onAuthStateChanged, builder: (ctx, userSnapshot) {
-        if (userSnapshot.hasData) {
-          return MyHomePage();
-        }
-        return AuthScreen();
-      }),
- 
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.onAuthStateChanged,
+          builder: (ctx, userSnapshot) {
+            if (userSnapshot.hasData) {
+              return MyHomePage();
+            }
+            return AuthScreen();
+          }),
     );
   }
 }
@@ -56,18 +58,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
-    // Transaction(
-    //   id: 't1',
-    //   title: 'New Shoes',
-    //   amount: 69.99,
-    //   date: DateTime.now(),
-    // ),
-    // Transaction(
-    //   id: 't2',
-    //   title: 'Weekly Groceries',
-    //   amount: 16.53,
-    //   date: DateTime.now(),
-    // ),
+    Transaction(
+      id: 't1',
+      title: 'New Shoes',
+      amount: 69.99,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't2',
+      title: 'Weekly Groceries',
+      amount: 16.53,
+      date: DateTime.now(),
+    ),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -75,6 +77,15 @@ class _MyHomePageState extends State<MyHomePage> {
       return tx.date.isAfter(
         DateTime.now().subtract(
           Duration(days: 7),
+        ),
+      );
+    }).toList();
+  }
+  List<Transaction> get _recentMonthlyTransactions {
+    return _userTransactions.where((tx) {
+      return tx.date.isAfter(
+        DateTime.now().subtract(
+          Duration(days: 365),
         ),
       );
     }).toList();
@@ -92,6 +103,30 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _userTransactions.add(newTx);
     });
+  }
+  void _showChartWeekly(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {},
+          child: Chart(_recentTransactions),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
+  void _showChartMonthly(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {},
+          child: LineCharts(_recentMonthlyTransactions),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -120,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(
           'Personal Expenses',
         ),
-        actions:[
+        actions: [
           DropdownButton(
             icon: Icon(
               Icons.more_vert,
@@ -150,10 +185,36 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
+           //mainAxisAlignment: MainAxisAlignment.,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(),
+                  ),
+                  child: Text("Weekly"),
+                  onPressed: () => _showChartWeekly(context),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(),
+                  ),
+                  child: Text("Quaterly"),
+                  onPressed: () => _showChartMonthly(context),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(),
+                  ),
+                  child: Text("Category"),
+                  onPressed: () => Chart(_recentTransactions),
+                ),
+              ],
+            ),
+            SizedBox(height:20),
             TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),
