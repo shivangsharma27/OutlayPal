@@ -1,10 +1,11 @@
+import 'package:OutlayPlanner/widgets/chart_category.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './screens/auth_screen.dart';
 import './widgets/new_transaction.dart';
 import './widgets/transaction_list.dart';
-import './widgets/chart.dart';
+import 'widgets/chart_weekly.dart';
 import './models/transaction.dart';
 import './widgets/chart_monthly.dart';
 
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.purple,
           accentColor: Colors.amber,
-          // errorColor: Colors.red,
           fontFamily: 'Quicksand',
           textTheme: ThemeData.light().textTheme.copyWith(
                 title: TextStyle(
@@ -51,8 +51,6 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  // String titleInput;
-  // String amountInput;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -92,6 +90,18 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }).toList();
   }
+  Map<String,double> dataMap = {};
+  Map<String,double> get _categoryTransactions {
+    for(var itr in _userTransactions){
+      if(dataMap.containsKey(itr.category)){
+          dataMap[itr.category] += itr.amount;
+      }
+      else{
+          dataMap[itr.category] = itr.amount;
+      }
+    }
+    return dataMap;
+  }
 
   void _addNewTransaction(
       String txTitle, double txAmount, DateTime chosenDate,String categoryy) {
@@ -128,6 +138,19 @@ class _MyHomePageState extends State<MyHomePage> {
         return GestureDetector(
           onTap: () {},
           child: LineCharts(_recentMonthlyTransactions),
+          behavior: HitTestBehavior.opaque,
+        );
+      },
+    );
+  }
+
+  void _showCategoryWise(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return GestureDetector(
+          onTap: () {},
+          child: ChartCategory(_categoryTransactions),
           behavior: HitTestBehavior.opaque,
         );
       },
@@ -213,7 +236,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
                   ),
-                  child: Text("Quaterly"),
+                  child: Text("Monthly"),
                   onPressed: () => _showChartMonthly(context),
                 ),
                 ElevatedButton(
@@ -221,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     shape: CircleBorder(),
                   ),
                   child: Text("Category"),
-                  onPressed: () => Chart(_recentTransactions),
+                  onPressed: () => _showCategoryWise(context),
                 ),
               ],
             ),
