@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Personal Expenses',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           primarySwatch: Colors.purple,
           accentColor: Colors.amber,
@@ -59,17 +60,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _userTransactions = [
     Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
+        id: 't1',
+        title: 'New Shoes',
+        amount: 69.99,
+        date: DateTime.now(),
+        category: 'lifestyle'),
     Transaction(
       id: 't2',
       title: 'Weekly Groceries',
       amount: 16.53,
       date: DateTime.now(),
-    ),
+      category: 'food'),
   ];
 
   List<Transaction> get _recentTransactions {
@@ -81,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }).toList();
   }
+
   List<Transaction> get _recentMonthlyTransactions {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(
@@ -92,18 +94,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate) {
+      String txTitle, double txAmount, DateTime chosenDate,String categoryy) {
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
       date: chosenDate,
       id: DateTime.now().toString(),
+      category: categoryy,
     );
 
     setState(() {
       _userTransactions.add(newTx);
     });
   }
+
   void _showChartWeekly(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -116,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+
   void _showChartMonthly(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
@@ -130,16 +135,22 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      builder: (_) {
-        return GestureDetector(
-          onTap: () {},
-          child: NewTransaction(_addNewTransaction),
-          behavior: HitTestBehavior.opaque,
-        );
-      },
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NewTransaction(_addNewTransaction),
+      ),
     );
+    // showModalBottomSheet(
+    //   context: ctx,
+    //   builder: (_) {
+    //     return GestureDetector(
+    //       onTap: () {},
+    //       child: NewTransaction(_addNewTransaction),
+    //       behavior: HitTestBehavior.opaque,
+    //     );
+    //   },
+    // );
   }
 
   void _deleteTransaction(String id) {
@@ -185,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: SingleChildScrollView(
         child: Column(
-           //mainAxisAlignment: MainAxisAlignment.,
+          //mainAxisAlignment: MainAxisAlignment.,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Row(
@@ -214,7 +225,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ],
             ),
-            SizedBox(height:20),
+            SizedBox(height: 20),
             TransactionList(_userTransactions, _deleteTransaction),
           ],
         ),

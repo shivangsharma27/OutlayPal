@@ -26,6 +26,7 @@ dependencies:
   intl: ^0.16.1
   fl_chart: ^0.10.1
   charts_flutter: ^0.10.0 
+  rflutter_alert: ^2.0.2
 
 
 
