@@ -73,8 +73,6 @@ class _NewTransactionState extends State<NewTransaction> {
     print('...');
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +97,7 @@ class _NewTransactionState extends State<NewTransaction> {
               ),
               Center(
                 child: Text(
-                  'Category${_selectedCategory}',
+                  'Category$_selectedCategory',
                   textAlign: TextAlign.left,
                 ),
               ),

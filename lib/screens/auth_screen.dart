@@ -1,11 +1,17 @@
+import 'package:OutlayPlanner/main.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:OutlayPlanner/widgets/auth/auth_form.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import '../backend/firestore.dart';
+
 
 class AuthScreen extends StatefulWidget {
+  // final Function getUserTransactions;
+  // AuthScreen(this.getUserTransactions);
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -21,7 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
     bool isLogin,
     BuildContext ctx,
   ) async {
-    AuthResult authResult;
+    UserCredential authResult;
 
     try {
       setState(() {
@@ -37,22 +43,26 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection('users')
-            .document(authResult.user.uid)
-            .setData({
+            .doc(authResult.user.uid)
+            .set({
           'username': username,
           'email': email,
         });
+        await FirebaseFirestore.instance
+            .collection('Transactions')
+            .doc(email)
+            .set({});
       }
     } on PlatformException catch (err) {
-      var message = 'An error occurred, pelase check your credentials!';
+      var message = 'An error occurred, please check your credentials!';
 
       if (err.message != null) {
         message = err.message;
       }
 
-      Scaffold.of(ctx).showSnackBar(
+      ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
           content: Text(message),
           backgroundColor: Theme.of(ctx).errorColor,

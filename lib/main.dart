@@ -1,17 +1,28 @@
 import 'package:OutlayPlanner/widgets/chart_category.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 
 import './screens/auth_screen.dart';
 import './widgets/new_transaction.dart';
-import './widgets/transaction_list.dart';
+import 'screens/transaction_list.dart';
 import 'widgets/chart_weekly.dart';
 import './models/transaction.dart';
 import './widgets/chart_monthly.dart';
+import './backend/firestore.dart';
 
-void main() => runApp(MyApp());
+String currUserEmail;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  final List<Transaction> _userTransaction = [];
+    
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,10 +50,25 @@ class MyApp extends StatelessWidget {
                 ),
           )),
       home: StreamBuilder(
-          stream: FirebaseAuth.instance.onAuthStateChanged,
+          stream: FirebaseAuth.instance.authStateChanges(),
           builder: (ctx, userSnapshot) {
             if (userSnapshot.hasData) {
-              return MyHomePage();
+              currUserEmail = FirebaseAuth.instance.currentUser.email;
+              transactions
+                  .doc(currUserEmail)
+                  .get()
+                  .then((firestore.DocumentSnapshot documentSnapshot) {
+                documentSnapshot.data().forEach((transaction, details) {
+                  final newTx = Transaction(
+                      category: details['category'],
+                      title: details['title'],
+                      amount: details['amount'],
+                      id: details['id'],
+                      date:DateTime.fromMicrosecondsSinceEpoch( details['date'].microsecondsSinceEpoch));
+                  _userTransaction.add(newTx);
+                });
+              });
+              return MyHomePage(_userTransaction);
             }
             return AuthScreen();
           }),
@@ -51,28 +77,18 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  final List<Transaction> userTransactions;
+
+  MyHomePage(this.userTransactions);
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _userTransactions = [
-    Transaction(
-        id: 't1',
-        title: 'New Shoes',
-        amount: 69.99,
-        date: DateTime.now(),
-        category: 'lifestyle'),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 16.53,
-      date: DateTime.now(),
-      category: 'food'),
-  ];
-
+  
   List<Transaction> get _recentTransactions {
-    return _userTransactions.where((tx) {
+    return widget.userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
           Duration(days: 7),
@@ -82,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Transaction> get _recentMonthlyTransactions {
-    return _userTransactions.where((tx) {
+    return widget.userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
           Duration(days: 365),
@@ -90,21 +106,40 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }).toList();
   }
-  Map<String,double> dataMap = {};
-  Map<String,double> get _categoryTransactions {
-    for(var itr in _userTransactions){
-      if(dataMap.containsKey(itr.category)){
-          dataMap[itr.category] += itr.amount;
-      }
-      else{
-          dataMap[itr.category] = itr.amount;
+
+  // void _getUserTransaction()
+  Map<String, double> dataMap = {};
+  Map<String, double> get _categoryTransactions {
+    for (var itr in widget.userTransactions) {
+      if (dataMap.containsKey(itr.category)) {
+        dataMap[itr.category] += itr.amount;
+      } else {
+        dataMap[itr.category] = itr.amount;
       }
     }
     return dataMap;
   }
 
+  Future<void> addUser(Map<String, Object> trans) {
+    // Call the user's CollectionReference to add a new user
+    return transactions
+        .doc(currUserEmail)
+        .update({trans['id'].toString().substring(0,19):trans})
+        .then((value) => print("transaction Added"))
+        .catchError((error) => print("Failed to add transaction: $error"));
+  }
+
   void _addNewTransaction(
-      String txTitle, double txAmount, DateTime chosenDate,String categoryy) {
+      String txTitle, double txAmount, DateTime chosenDate, String categoryy) {
+    Map<String, Object> trans = {
+      'title': txTitle,
+      'amount': txAmount,
+      'date': chosenDate,
+      'id': DateTime.now().toString(),
+      'category': categoryy
+    };
+    addUser(trans);
+
     final newTx = Transaction(
       title: txTitle,
       amount: txAmount,
@@ -114,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     setState(() {
-      _userTransactions.add(newTx);
+      widget.userTransactions.add(newTx);
     });
   }
 
@@ -178,7 +213,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _deleteTransaction(String id) {
     setState(() {
-      _userTransactions.removeWhere((tx) => tx.id == id);
+      widget.userTransactions.removeWhere((tx) => tx.id == id);
     });
   }
 
@@ -249,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             SizedBox(height: 20),
-            TransactionList(_userTransactions, _deleteTransaction),
+            TransactionList(widget.userTransactions, _deleteTransaction),
           ],
         ),
       ),

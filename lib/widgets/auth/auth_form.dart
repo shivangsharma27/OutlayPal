@@ -97,7 +97,7 @@ class _AuthFormState extends State<AuthForm> {
                   SizedBox(height: 12),
                   if (widget.isLoading) CircularProgressIndicator(),
                   if (!widget.isLoading)
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text(_isLogin ? 'Login' : 'Signup'),
                       onPressed: _trySubmit,
                     ),
