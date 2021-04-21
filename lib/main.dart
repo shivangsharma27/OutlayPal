@@ -13,6 +13,7 @@ import './widgets/chart_monthly.dart';
 import './backend/firestore.dart';
 
 String currUserEmail;
+List<Transaction> userTransactions = [];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,74 +22,89 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  final List<Transaction> _userTransaction = [];
-    
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Personal Expenses',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          primarySwatch: Colors.purple,
-          accentColor: Colors.amber,
-          fontFamily: 'Quicksand',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                title: TextStyle(
-                  fontFamily: 'OpenSans',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-                button: TextStyle(color: Colors.white),
-              ),
-          appBarTheme: AppBarTheme(
+        title: 'Personal Expenses',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            primarySwatch: Colors.lightGreen,
+            accentColor: Colors.purple,
+            fontFamily: 'Quicksand',
             textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(
                     fontFamily: 'OpenSans',
-                    fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    fontSize: 18,
                   ),
+                  button: TextStyle(color: Colors.white),
                 ),
-          )),
-      home: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (ctx, userSnapshot) {
-            if (userSnapshot.hasData) {
-              currUserEmail = FirebaseAuth.instance.currentUser.email;
-              transactions
-                  .doc(currUserEmail)
-                  .get()
-                  .then((firestore.DocumentSnapshot documentSnapshot) {
-                documentSnapshot.data().forEach((transaction, details) {
-                  final newTx = Transaction(
-                      category: details['category'],
-                      title: details['title'],
-                      amount: details['amount'],
-                      id: details['id'],
-                      date:DateTime.fromMicrosecondsSinceEpoch( details['date'].microsecondsSinceEpoch));
-                  _userTransaction.add(newTx);
-                });
-              });
-              return MyHomePage(_userTransaction);
-            }
-            return AuthScreen();
-          }),
-    );
+            appBarTheme: AppBarTheme(
+              textTheme: ThemeData.light().textTheme.copyWith(
+                    title: TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+            )),
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (ctx, userSnapshot) {
+              if (FirebaseAuth.instance.currentUser != null) {
+                currUserEmail = FirebaseAuth.instance.currentUser.email;
+                return MyHomePage();
+              } else {
+                return AuthScreen();
+              }
+            })
+        // (FirebaseAuth.instance.currentUser != null)? MyHomePage() : AuthScreen()
+
+        );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  final List<Transaction> userTransactions;
+  // List<Transaction> userTransactions;
 
-  MyHomePage(this.userTransactions);
+  // MyHomePage(this.userTransactions);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
+  bool isLoading = true;
+
+  _MyHomePageState() {
+    mainScreen2();
+  }
+
+  Future<void> mainScreen2() async {
+    currUserEmail = FirebaseAuth.instance.currentUser.email;
+
+    print(currUserEmail);
+
+    firestore.DocumentSnapshot docker =
+        await transactions.doc(currUserEmail).get();
+    docker.data().forEach((transaction, details) {
+      final newTx = Transaction(
+          category: details['category'],
+          title: details['title'],
+          amount: details['amount'],
+          id: details['id'],
+          date: DateTime.fromMicrosecondsSinceEpoch(
+              details['date'].microsecondsSinceEpoch));
+      userTransactions.add(newTx);
+      print('khel gaya');
+    });
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   List<Transaction> get _recentTransactions {
-    return widget.userTransactions.where((tx) {
+    return userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
           Duration(days: 7),
@@ -98,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   List<Transaction> get _recentMonthlyTransactions {
-    return widget.userTransactions.where((tx) {
+    return userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
           Duration(days: 365),
@@ -110,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // void _getUserTransaction()
   Map<String, double> dataMap = {};
   Map<String, double> get _categoryTransactions {
-    for (var itr in widget.userTransactions) {
+    for (var itr in userTransactions) {
       if (dataMap.containsKey(itr.category)) {
         dataMap[itr.category] += itr.amount;
       } else {
@@ -124,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Call the user's CollectionReference to add a new user
     return transactions
         .doc(currUserEmail)
-        .update({trans['id'].toString().substring(0,19):trans})
+        .update({trans['id'].toString().substring(0, 19): trans})
         .then((value) => print("transaction Added"))
         .catchError((error) => print("Failed to add transaction: $error"));
   }
@@ -149,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     setState(() {
-      widget.userTransactions.add(newTx);
+      userTransactions.add(newTx);
     });
   }
 
@@ -211,9 +227,18 @@ class _MyHomePageState extends State<MyHomePage> {
     // );
   }
 
+  void stat() {
+    setState(() {});
+  }
+
   void _deleteTransaction(String id) {
+    transactions
+        .doc(currUserEmail)
+        .update({id.substring(0, 19): firestore.FieldValue.delete()})
+          .catchError(
+              (error) => print("Failed to delete user's property: $error"));
     setState(() {
-      widget.userTransactions.removeWhere((tx) => tx.id == id);
+      userTransactions.removeWhere((tx) => tx.id == id);
     });
   }
 
@@ -222,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Personal Expenses',
+          'OutlayPlanner',
         ),
         actions: [
           DropdownButton(
@@ -246,48 +271,51 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
             onChanged: (itemIdentifier) {
               if (itemIdentifier == 'logout') {
+                userTransactions = [];
                 FirebaseAuth.instance.signOut();
               }
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Column(
+                //mainAxisAlignment: MainAxisAlignment.,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                        ),
+                        child: Text("Weekly"),
+                        onPressed: () => _showChartWeekly(context),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                        ),
+                        child: Text("Monthly"),
+                        onPressed: () => _showChartMonthly(context),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: CircleBorder(),
+                        ),
+                        child: Text("Category"),
+                        onPressed: () => _showCategoryWise(context),
+                      ),
+                    ],
                   ),
-                  child: Text("Weekly"),
-                  onPressed: () => _showChartWeekly(context),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                  ),
-                  child: Text("Monthly"),
-                  onPressed: () => _showChartMonthly(context),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                  ),
-                  child: Text("Category"),
-                  onPressed: () => _showCategoryWise(context),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  TransactionList(userTransactions, _deleteTransaction),
+                ],
+              ),
             ),
-            SizedBox(height: 20),
-            TransactionList(widget.userTransactions, _deleteTransaction),
-          ],
-        ),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

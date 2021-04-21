@@ -8,25 +8,25 @@ class ChartCategory extends StatelessWidget {
 
   ChartCategory(this.categoryTransactions);
   
-  final List<Color> colorlist = [Colors.orange, Colors.pink,Colors.green];
+  final List<Color> colorlist = [Colors.orange, Colors.pink,Colors.green[100]];
 
   @override
   Widget build(BuildContext context) {
     return PieChart(
       dataMap: categoryTransactions,
-      animationDuration: Duration(milliseconds: 800),
+      animationDuration: Duration(milliseconds: 2000),
       chartLegendSpacing: 32,
-      chartRadius: MediaQuery.of(context).size.width / 3.2,
+      chartRadius: MediaQuery.of(context).size.width / 1.5,
       colorList: colorlist,
       initialAngleInDegree: 0,
-      chartType: ChartType.ring,
+      chartType: ChartType.disc,
       ringStrokeWidth: 32,
-      centerText: "HYBRID",
+      
       legendOptions: LegendOptions(
         showLegendsInRow: false,
         legendPosition: LegendPosition.right,
         showLegends: true,
-        legendShape: BoxShape.circle,
+        legendShape: BoxShape.rectangle,
         legendTextStyle: TextStyle(
           fontWeight: FontWeight.bold,
         ),
@@ -34,7 +34,7 @@ class ChartCategory extends StatelessWidget {
       chartValuesOptions: ChartValuesOptions(
         showChartValueBackground: true,
         showChartValues: true,
-        showChartValuesInPercentage: false,
+        showChartValuesInPercentage: true,
         showChartValuesOutside: false,
         decimalPlaces: 1,
       ),

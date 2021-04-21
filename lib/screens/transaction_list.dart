@@ -60,7 +60,7 @@ class TransactionList extends StatelessWidget {
                 Container(
                     height: 200,
                     child: Image.asset(
-                      'images/waiting.png',
+                      'assets/images/csk.png',
                       fit: BoxFit.cover,
                     )),
               ],
@@ -68,6 +68,7 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
+                  color: Colors.teal,
                   elevation: 5,
                   margin: EdgeInsets.symmetric(
                     vertical: 8,
@@ -75,17 +76,18 @@ class TransactionList extends StatelessWidget {
                   ),
                   child: ListTile(
                     leading: CircleAvatar(
-                      radius: 30,
+                      radius: 40,
                       child: Padding(
                         padding: EdgeInsets.all(6),
                         child: FittedBox(
-                          child: Text('\$${transactions[index].amount}'),
+                          child: Text('\$${transactions[index].amount}',),
                         ),
                       ),
                     ),
                     title: Text(
                       transactions[index].title,
-                      style: Theme.of(context).textTheme.title,
+                      // style: Theme.of(context).textTheme.headline6,
+                      style: TextStyle(color: Colors.white,fontSize:16),
                     ),
                     subtitle: Text(
                       DateFormat.yMMMd().format(transactions[index].date),

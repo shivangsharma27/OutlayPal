@@ -8,7 +8,6 @@ import 'package:OutlayPlanner/widgets/auth/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../backend/firestore.dart';
 
-
 class AuthScreen extends StatefulWidget {
   // final Function getUserTransactions;
   // AuthScreen(this.getUserTransactions);

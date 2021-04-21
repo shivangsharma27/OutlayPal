@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AuthForm extends StatefulWidget {
-  AuthForm(
-    this.submitFn,
-    this.isLoading,
-  );
-
   final bool isLoading;
   final void Function(
     String email,
@@ -15,6 +10,12 @@ class AuthForm extends StatefulWidget {
     BuildContext ctx,
   ) submitFn;
 
+  AuthForm(
+    this.submitFn,
+    this.isLoading,
+  );
+
+  
   @override
   _AuthFormState createState() => _AuthFormState();
 }
