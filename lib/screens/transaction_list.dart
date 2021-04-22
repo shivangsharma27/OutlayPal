@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../widgets/global.dart' as globals;
+import './new_transaction.dart';
 
 import '../models/transaction.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -9,6 +11,34 @@ class TransactionList extends StatelessWidget {
   final Function deleteTx;
 
   TransactionList(this.transactions, this.deleteTx);
+
+  Map<String, Object> categoryIcons = {
+    'Food': Icon(
+      Icons.restaurant,
+      color: Colors.orange[800],
+    ),
+    'Transport': Icon(
+      Icons.train,
+      color:Colors.pink[300]
+    ),
+    'Health': Icon(Icons.healing,color: Colors.orange[200],),
+    'Entertainment': Icon(
+      Icons.attractions,
+      color: Colors.limeAccent[400],
+    ),
+    'Fuel': Icon(
+      Icons.local_gas_station,color: Colors.yellow[800],
+    ),
+    'Bills': Icon(Icons.list_alt,color: Colors.lightGreen,),
+    'Fashion': Icon(Icons.dry_cleaning,color: Colors.blue[400]),
+    'Groceries': Icon(
+      Icons.local_grocery_store,
+      color: Colors.red,
+    ),
+    'Others': Icon(
+      Icons.add_circle,
+    ),
+  };
 
   void _alertDialog(BuildContext context, int index) {
     Alert(
@@ -68,34 +98,42 @@ class TransactionList extends StatelessWidget {
           : ListView.builder(
               itemBuilder: (ctx, index) {
                 return Card(
-                  color: Colors.teal,
-                  elevation: 5,
+                  color: globals.themeColor[200],
+                  elevation: 10,
                   margin: EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 5,
                   ),
-                  child: ListTile(
+                  child: ListTile( 
+                    contentPadding: EdgeInsets.symmetric(vertical:0,horizontal:5),
                     leading: CircleAvatar(
-                      radius: 40,
-                      child: Padding(
-                        padding: EdgeInsets.all(6),
-                        child: FittedBox(
-                          child: Text('\$${transactions[index].amount}',),
-                        ),
-                      ),
+                      backgroundColor: globals.themeColor[900],
+                      radius: 30,
+                      child: categoryIcons[transactions[index].category],
                     ),
                     title: Text(
                       transactions[index].title,
                       // style: Theme.of(context).textTheme.headline6,
-                      style: TextStyle(color: Colors.white,fontSize:16),
+                      style: TextStyle(fontSize: 16),
                     ),
                     subtitle: Text(
-                      DateFormat.yMMMd().format(transactions[index].date),
+                      '\₹${transactions[index].amount}',
+                      style:TextStyle(fontSize: 18),
                     ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      color: Theme.of(context).errorColor,
-                      onPressed: () => _alertDialog(context, index),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                      DateFormat.yMMMd().format(transactions[index].date),
+                      style:TextStyle(fontSize: 16),
+                    ),
+                        IconButton(
+                          iconSize: 35,
+                          icon: Icon(Icons.delete),
+                          color: globals.themeColor[900],
+                          onPressed: () => _alertDialog(context, index),
+                        ),
+                      ],
                     ),
                   ),
                 );

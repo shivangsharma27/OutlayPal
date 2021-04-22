@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
+import './widgets/global.dart' as globals;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import './screens/auth_screen.dart';
-import './widgets/new_transaction.dart';
+import 'screens/new_transaction.dart';
 import 'screens/transaction_list.dart';
 import 'widgets/chart_weekly.dart';
 import './models/transaction.dart';
@@ -28,8 +30,9 @@ class MyApp extends StatelessWidget {
         title: 'Personal Expenses',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primarySwatch: Colors.lightGreen,
+            primarySwatch: MaterialColor(0xff263238, globals.themeColor),
             accentColor: Colors.purple,
+            canvasColor: globals.themeColor[500],
             fontFamily: 'Quicksand',
             textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(
@@ -232,14 +235,46 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteTransaction(String id) {
-    transactions
-        .doc(currUserEmail)
-        .update({id.substring(0, 19): firestore.FieldValue.delete()})
-          .catchError(
-              (error) => print("Failed to delete user's property: $error"));
+    transactions.doc(currUserEmail).update({
+      id.substring(0, 19): firestore.FieldValue.delete()
+    }).catchError((error) => print("Failed to delete user's property: $error"));
     setState(() {
       userTransactions.removeWhere((tx) => tx.id == id);
     });
+  }
+
+  void _alertDialog(BuildContext context) {
+    Alert(
+      context: context,
+      type: AlertType.warning,
+      title: "Are u Sure?",
+      desc: "You will be signed out.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "YES",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            userTransactions = [];
+            FirebaseAuth.instance.signOut();
+            Navigator.pop(context);
+          },
+          color: Color.fromRGBO(0, 179, 134, 1.0),
+        ),
+        DialogButton(
+          child: Text(
+            "CANCEL",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          gradient: LinearGradient(colors: [
+            Color.fromRGBO(116, 116, 191, 1.0),
+            Color.fromRGBO(52, 138, 199, 1.0)
+          ]),
+        )
+      ],
+    ).show();
   }
 
   @override
@@ -250,76 +285,110 @@ class _MyHomePageState extends State<MyHomePage> {
           'OutlayPlanner',
         ),
         actions: [
-          DropdownButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Theme.of(context).primaryIconTheme.color,
-            ),
-            items: [
-              DropdownMenuItem(
-                child: Container(
-                  child: Row(
-                    children: <Widget>[
-                      Icon(Icons.exit_to_app_outlined),
-                      SizedBox(width: 4),
-                      Text('Logout'),
-                    ],
-                  ),
-                ),
-                value: 'logout',
-              ),
-            ],
-            onChanged: (itemIdentifier) {
-              if (itemIdentifier == 'logout') {
-                userTransactions = [];
-                FirebaseAuth.instance.signOut();
-              }
-            },
-          ),
+          IconButton(
+              icon: Icon(Icons.account_circle_sharp),
+              iconSize: 35,
+              onPressed: () => _alertDialog(context)),
         ],
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
+                  Container(
+                    margin: EdgeInsets.only(top: 10),
+                    height: 100,
+                    padding: EdgeInsets.all(5),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              primary: globals.themeColor[100],
+                            ),
+                            child: Text(
+                              "Weekly",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                            onPressed: () => _showChartWeekly(context),
+                          ),
                         ),
-                        child: Text("Weekly"),
-                        onPressed: () => _showChartWeekly(context),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
+                        SizedBox(
+                          width: 5,
                         ),
-                        child: Text("Monthly"),
-                        onPressed: () => _showChartMonthly(context),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              primary: globals.themeColor[100],
+                            ),
+                            child: Text(
+                              "Monthly",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                            onPressed: () => _showChartMonthly(context),
+                          ),
                         ),
-                        child: Text("Category"),
-                        onPressed: () => _showCategoryWise(context),
-                      ),
-                    ],
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              primary: globals.themeColor[100],
+                            ),
+                            child: Text(
+                              "Category",
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.black),
+                            ),
+                            onPressed: () => _showCategoryWise(context),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 20),
+                  Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Transactions',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    margin: EdgeInsets.all(20),
+                  ),
                   TransactionList(userTransactions, _deleteTransaction),
                 ],
               ),
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => _startAddNewTransaction(context),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 20.0),
+        child: ElevatedButton(
+          style: ButtonStyle(
+            shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
+            padding: MaterialStateProperty.all(EdgeInsets.all(13)),
+            elevation: MaterialStateProperty.all(10),
+            backgroundColor: MaterialStateProperty.all(globals.themeColor[900]),
+          ),
+          child: Text(
+            'Add Outlay',
+            style: TextStyle(fontSize: 16),
+          ),
+          onPressed: () => _startAddNewTransaction(context),
+        ),
       ),
     );
   }

@@ -61,7 +61,7 @@ class _AuthFormState extends State<AuthForm> {
                     },
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      labelText: 'Email address',
+                      hintText: 'Email address',
                     ),
                     onSaved: (value) {
                       _userEmail = value;
@@ -76,7 +76,7 @@ class _AuthFormState extends State<AuthForm> {
                         }
                         return null;
                       },
-                      decoration: InputDecoration(labelText: 'Username'),
+                      decoration: InputDecoration(hintText: 'Username'),
                       onSaved: (value) {
                         _userName = value;
                       },
@@ -89,7 +89,7 @@ class _AuthFormState extends State<AuthForm> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(labelText: 'Password'),
+                    decoration: InputDecoration(hintText: 'Password'),
                     obscureText: true,
                     onSaved: (value) {
                       _userPassword = value;
