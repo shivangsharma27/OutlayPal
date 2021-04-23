@@ -100,7 +100,7 @@ class _NewTransactionState extends State<NewTransaction> {
               child: Column(
                 children: <Widget>[
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: globals.themeColor[200],
@@ -114,7 +114,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         ]),
                     width: MediaQuery.of(context).size.width - 20,
                     child: TextField(
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                       decoration: InputDecoration(
                         hintText: 'What was this spend for?',
                       ),
@@ -124,7 +124,7 @@ class _NewTransactionState extends State<NewTransaction> {
                   ),
                   SizedBox(height: 10),
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: globals.themeColor[200],
@@ -138,7 +138,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         ]),
                     width: MediaQuery.of(context).size.width - 20,
                     child: TextField(
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                       decoration: InputDecoration(hintText: 'Enter Amount'),
                       controller: _amountController,
                       keyboardType: TextInputType.number,
@@ -178,7 +178,7 @@ class _NewTransactionState extends State<NewTransaction> {
                       width: MediaQuery.of(context).size.width - 20,
                       alignment: Alignment.center,
                       padding:
-                          EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                          EdgeInsets.symmetric(vertical: 10,),
                       height: MediaQuery.of(context).size.height / 2.7,
                       child: GridView.count(
                         crossAxisCount: 4,
@@ -202,7 +202,7 @@ class _NewTransactionState extends State<NewTransaction> {
                                     },
                                     icon: icons[index]['Icon']),
                               ),
-                              Text(icons[index]['name']),
+                              Text(icons[index]['name'], style: TextStyle(fontSize : 12),),
                             ],
                           );
                         }),
@@ -221,7 +221,7 @@ class _NewTransactionState extends State<NewTransaction> {
                                 ? 'No Date Chosen!'
                                 : 'Picked Date: ${DateFormat.yMd().format(_selectedDate)}',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ),
                         Container(
@@ -234,7 +234,7 @@ class _NewTransactionState extends State<NewTransaction> {
                               'Choose Date',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                                fontSize: 14,
                                 color: Colors.black,
                                 // backgroundColor: Colors.blue,
                               ),

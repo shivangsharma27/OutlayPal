@@ -97,10 +97,12 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height - 350,
+      height: MediaQuery.of(context).size.height - 310,
       child: transactions.isEmpty
           ? Column(
               children: <Widget>[
+                SizedBox(
+                  height: 20,),
                 Text(
                   'No transactions added yet!',
                   style: Theme.of(context).textTheme.title,
@@ -137,7 +139,7 @@ class TransactionList extends StatelessWidget {
                     title: Text(
                       transactions[index].title,
                       // style: Theme.of(context).textTheme.headline6,
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 14),
                     ),
                     subtitle: Text(
                       '\₹${transactions[index].amount}',
@@ -148,10 +150,10 @@ class TransactionList extends StatelessWidget {
                       children: [
                         Text(
                           DateFormat.yMMMd().format(transactions[index].date),
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 12),
                         ),
                         IconButton(
-                          iconSize: 35,
+                          iconSize: 30,
                           icon: Icon(Icons.delete),
                           color: globals.themeColor[900],
                           onPressed: () => _alertDialog(context, index),

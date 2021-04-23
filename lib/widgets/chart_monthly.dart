@@ -6,7 +6,7 @@ import 'global.dart' as globals;
 
 class LineCharts extends StatelessWidget {
   final List<Transaction> recentMonthlyTransactions;
-
+  
   LineCharts(this.recentMonthlyTransactions);
 
   List<Map<String, Object>> get groupedTransactionValues {
@@ -22,6 +22,7 @@ class LineCharts extends StatelessWidget {
           totalSum += recentMonthlyTransactions[i].amount;
         }
       }
+      
       return {
         'month': DateFormat.MMM().format(myMonth).substring(0, 3),
         'amount': totalSum,
@@ -41,17 +42,19 @@ class LineCharts extends StatelessWidget {
 
   List<charts.Series<BarChartModel, String>> _createSampleData() {
     final List<BarChartModel> data = [];
+    var finalTotalSum = 0.0;
     for (var i = 0; i < groupedTransactionValues.length; i++) {
+      finalTotalSum += groupedTransactionValues[i]['amount'];
       data.add(new BarChartModel(groupedTransactionValues[i]['month'],
           groupedTransactionValues[i]['amount']));
     }
-
+    print(finalTotalSum);
     return [
       new charts.Series<BarChartModel, String>(
         id: 'Sales',
         colorFn: (_, __) => charts.MaterialPalette.gray.shade900,
         domainFn: (BarChartModel sales, _) => sales.month,
-        measureFn: (BarChartModel sales, _) => sales.financial,
+        measureFn: (BarChartModel sales, _) => (sales.financial/finalTotalSum) * 100,
         data: data,
         labelAccessorFn: (BarChartModel sales, _) {
           return sales.financial < 1000
@@ -68,9 +71,18 @@ class LineCharts extends StatelessWidget {
       margin: EdgeInsets.all(10),
       child: charts.BarChart(
         _createSampleData(),
-        animate: true,
+        animate: false,
+        //animationDuration: Duration(seconds:2),
         primaryMeasureAxis: new charts.NumericAxisSpec(
-          renderSpec: new charts.NoneRenderSpec(), //GridlineRendererSpec(
+          tickProviderSpec: new charts.StaticNumericTickProviderSpec(<charts.TickSpec<num>>[
+            charts.TickSpec<num>(0),
+            charts.TickSpec<num>(20),
+            charts.TickSpec<num>(40),
+            charts.TickSpec<num>(60),
+            charts.TickSpec<num>(80),
+            charts.TickSpec<num>(100),
+          ]),
+          //renderSpec: new charts.NoneRenderSpec(), //GridlineRendererSpec(
           // Display the measure axis labels below the gridline.
           //
           // 'Before' & 'after' follow the axis value direction.
@@ -124,14 +136,14 @@ class LineCharts extends StatelessWidget {
           barRendererDecorator: new charts.BarLabelDecorator(
               labelPosition: charts.BarLabelPosition.auto,
               labelPadding: 15,
-              // labelAnchor: charts.BarLabelAnchor.end,
+              labelAnchor: charts.BarLabelAnchor.end,
               insideLabelStyleSpec: charts.TextStyleSpec(
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.bold.toString(),
                 color: charts.MaterialPalette.white,
               ),
               outsideLabelStyleSpec: charts.TextStyleSpec(
-                fontSize: 16,
+                fontSize: 11,
                 fontWeight: FontWeight.bold.toString(),
                 color: charts.MaterialPalette.black,
               )),

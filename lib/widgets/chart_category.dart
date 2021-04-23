@@ -9,7 +9,7 @@ class ChartCategory extends StatelessWidget {
   ChartCategory(this.categoryTransactions);
 
   final List<Color> colorlist = [
-    Colors.limeAccent,
+    Colors.yellow,
     Colors.purpleAccent[400],
     Colors.orangeAccent[400],
     Colors.cyan[300],
@@ -17,7 +17,7 @@ class ChartCategory extends StatelessWidget {
     Colors.limeAccent[400],
     Colors.blue[400],
     Colors.red,
-    globals.themeColor[200],
+    globals.themeColor[500],
   ];
 
   @override
@@ -26,18 +26,19 @@ class ChartCategory extends StatelessWidget {
       color: globals.themeColor[200],
       elevation: 6,
       margin: EdgeInsets.all(10),
-      child: PieChart(
+      child: (categoryTransactions.isEmpty)? Center(child:Text("No Transactions Added yet!"),):
+      PieChart(
         dataMap: categoryTransactions,
         animationDuration: Duration(milliseconds: 2000),
         chartLegendSpacing: 32,
-        chartRadius: MediaQuery.of(context).size.width / 2,
+        chartRadius: MediaQuery.of(context).size.width / 1.5,
         colorList: colorlist,
         initialAngleInDegree: 0,
         chartType: ChartType.disc,
         ringStrokeWidth: 32,
         legendOptions: LegendOptions(
-          showLegendsInRow: false,
-          legendPosition: LegendPosition.right,
+          showLegendsInRow: true,
+          legendPosition: LegendPosition.bottom,
           showLegends: true,
           legendShape: BoxShape.circle,
           legendTextStyle: TextStyle(
@@ -47,7 +48,7 @@ class ChartCategory extends StatelessWidget {
         ),
         chartValuesOptions: ChartValuesOptions(
           chartValueBackgroundColor: globals.themeColor[900],
-          chartValueStyle: TextStyle(color: globals.themeColor[200],fontWeight: FontWeight.bold),
+          chartValueStyle: TextStyle(color: globals.themeColor[200],fontSize: 10),
           showChartValueBackground: true,
           showChartValues: true,
           showChartValuesInPercentage: true,

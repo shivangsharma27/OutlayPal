@@ -18,7 +18,7 @@ class ChartBar extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -61,12 +61,12 @@ class ChartBar extends StatelessWidget {
         Expanded(
           flex: 4,
           child: Container(
-            height: 20,
+            height: 17,
             child: FittedBox(
               child: Text(
                 '\₹${spendingAmount.toStringAsFixed(0)}',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),

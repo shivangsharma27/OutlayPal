@@ -57,7 +57,7 @@ class _AuthFormState extends State<AuthForm> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     TextFormField(
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 16),
                       key: ValueKey('email'),
                       validator: (value) {
                         if (value.isEmpty || !value.contains('@')) {
@@ -75,7 +75,7 @@ class _AuthFormState extends State<AuthForm> {
                     ),
                     if (!_isLogin)
                       TextFormField(
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 16),
                         key: ValueKey('username'),
                         validator: (value) {
                           if (value.isEmpty || value.length < 4) {
@@ -90,7 +90,7 @@ class _AuthFormState extends State<AuthForm> {
                       ),
                       SizedBox(height: 5,),
                     TextFormField(
-                      style: TextStyle(fontSize: 18,),
+                      style: TextStyle(fontSize: 16,),
                       key: ValueKey('password'),
                       validator: (value) {
                         if (value.isEmpty || value.length < 7) {
@@ -125,7 +125,7 @@ class _AuthFormState extends State<AuthForm> {
                           _isLogin
                               ? 'Create new account'
                               : 'I already have an account !',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 14),
                         ),
                         style: ButtonStyle(),
                         onPressed: () {

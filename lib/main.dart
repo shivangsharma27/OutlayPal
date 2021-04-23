@@ -335,7 +335,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Text(
                               "Weekly",
                               style:
-                                  TextStyle(fontSize: 18, color: Colors.black),
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                             onPressed: () => _showChartWeekly(context),
                           ),
@@ -353,7 +353,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Text(
                               "Monthly",
                               style:
-                                  TextStyle(fontSize: 18, color: Colors.black),
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                             onPressed: () => _showChartMonthly(context),
                           ),
@@ -371,7 +371,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Text(
                               "Category",
                               style:
-                                  TextStyle(fontSize: 18, color: Colors.black),
+                                  TextStyle(fontSize: 16, color: Colors.black),
                             ),
                             onPressed: () => _showCategoryWise(context),
                           ),
@@ -386,7 +386,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    margin: EdgeInsets.all(20),
+                    margin: EdgeInsets.all(10),
                   ),
                   TransactionList(userTransactions, _deleteTransaction),
                 ],
@@ -394,7 +394,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
+        padding: const EdgeInsets.only(bottom: 10.0),
         child: ElevatedButton(
           style: ButtonStyle(
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
