@@ -1,4 +1,5 @@
 import 'package:OutlayPlanner/main.dart';
+import 'package:OutlayPlanner/widgets/global.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,8 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../backend/firestore.dart';
 
 class AuthScreen extends StatefulWidget {
-  // final Function getUserTransactions;
-  // AuthScreen(this.getUserTransactions);
+  
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -80,11 +80,14 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: AuthForm(
-        _submitAuthForm,
-        _isLoading,
+    return Container(
+      decoration: getGradient(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: AuthForm(
+          _submitAuthForm,
+          _isLoading,
+        ),
       ),
     );
   }

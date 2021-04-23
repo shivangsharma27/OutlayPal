@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'global.dart' as globals;
 
 import 'chart_bar.dart';
 import '../models/transaction.dart';
@@ -25,7 +26,7 @@ class Chart extends StatelessWidget {
       }
 
       return {
-        'day': DateFormat.E().format(weekDay).substring(0, 1),
+        'day': DateFormat.E().format(weekDay),
         'amount': totalSum,
       };
     }).reversed.toList();
@@ -40,12 +41,13 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+       color: globals.themeColor[200],
       elevation: 6,
-      margin: EdgeInsets.all(20),
+      margin: EdgeInsets.all(10),
       child: Padding(
         padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: groupedTransactionValues.map((data) {
             return Flexible(
               fit: FlexFit.tight,

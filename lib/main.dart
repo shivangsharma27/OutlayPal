@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
             primarySwatch: MaterialColor(0xff263238, globals.themeColor),
-            accentColor: Colors.purple,
+            primaryColor: globals.themeColor[900],
+            // accentColor: Colors.purple,
             canvasColor: globals.themeColor[500],
             fontFamily: 'Quicksand',
             textTheme: ThemeData.light().textTheme.copyWith(
@@ -127,8 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // void _getUserTransaction()
-  Map<String, double> dataMap = {};
+  
   Map<String, double> get _categoryTransactions {
+    Map<String, double> dataMap = {};
     for (var itr in userTransactions) {
       if (dataMap.containsKey(itr.category)) {
         dataMap[itr.category] += itr.amount;
@@ -191,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (_) {
         return GestureDetector(
           onTap: () {},
-          child: LineCharts(_recentMonthlyTransactions),
+          child: Container(child: LineCharts(_recentMonthlyTransactions),),
           behavior: HitTestBehavior.opaque,
         );
       },
@@ -247,10 +249,22 @@ class _MyHomePageState extends State<MyHomePage> {
     Alert(
       context: context,
       type: AlertType.warning,
+      style: AlertStyle(backgroundColor: globals.themeColor[100]),
       title: "Are u Sure?",
       desc: "You will be signed out.",
       buttons: [
         DialogButton(
+        gradient:LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.1,0.7],
+      colors: [
+        //Sunkist
+        Color(0xff90A4AE),
+        Color(0xff37474F),
+        
+      ],
+    ),
           child: Text(
             "YES",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -260,7 +274,6 @@ class _MyHomePageState extends State<MyHomePage> {
             FirebaseAuth.instance.signOut();
             Navigator.pop(context);
           },
-          color: Color.fromRGBO(0, 179, 134, 1.0),
         ),
         DialogButton(
           child: Text(
@@ -268,10 +281,17 @@ class _MyHomePageState extends State<MyHomePage> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () => Navigator.pop(context),
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(116, 116, 191, 1.0),
-            Color.fromRGBO(52, 138, 199, 1.0)
-          ]),
+          gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      stops: [0.1,0.7],
+      colors: [
+        
+        Color(0xff90A4AE),
+        Color(0xff37474F),
+        
+      ],
+    ),
         )
       ],
     ).show();

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../widgets/global.dart' as globals;
 
-
 class NewTransaction extends StatefulWidget {
   final Function addTx;
 
@@ -44,40 +43,16 @@ class _NewTransactionState extends State<NewTransaction> {
   }
 
   final List<Map<String, Object>> icons = [
-    {
-      'Icon': Icon(
-        Icons.restaurant,
-        color: Colors.orange[800],
-      ),
-      'name': 'Food'
-    },
+    {'Icon': Icon(Icons.restaurant, color: Colors.orange[800]), 'name': 'Food'},
     {'Icon': Icon(Icons.train, color: Colors.pink[300]), 'name': 'Transport'},
+    {'Icon': Icon(Icons.healing, color: Colors.orange[200]), 'name': 'Health'},
     {
-      'Icon': Icon(
-        Icons.healing,
-        color: Colors.orange[200],
-      ),
-      'name': 'Health'
-    },
-    {
-      'Icon': Icon(
-        Icons.local_gas_station,
-        color: Colors.yellow[800],
-      ),
+      'Icon': Icon(Icons.local_gas_station, color: Colors.yellow[800]),
       'name': 'Fuel'
     },
+    {'Icon': Icon(Icons.list_alt, color: Colors.lightGreen), 'name': 'Bills'},
     {
-      'Icon': Icon(
-        Icons.list_alt,
-        color: Colors.lightGreen,
-      ),
-      'name': 'Bills'
-    },
-    {
-      'Icon': Icon(
-        Icons.attractions,
-        color: Colors.limeAccent[400],
-      ),
+      'Icon': Icon(Icons.attractions, color: Colors.limeAccent[400]),
       'name': 'Entertainment'
     },
     {
@@ -85,18 +60,10 @@ class _NewTransactionState extends State<NewTransaction> {
       'name': 'Fashion'
     },
     {
-      'Icon': Icon(
-        Icons.local_grocery_store,
-        color: Colors.red,
-      ),
+      'Icon': Icon(Icons.local_grocery_store, color: Colors.red),
       'name': 'Groceries'
     },
-    {
-      'Icon': Icon(
-        Icons.add_circle,
-      ),
-      'name': 'Others'
-    },
+    {'Icon': Icon(Icons.add_circle,color: globals.themeColor[200],), 'name': 'Others'},
   ];
 
   void _presentDatePicker() {
@@ -149,7 +116,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     child: TextField(
                       style: TextStyle(fontSize: 18),
                       decoration: InputDecoration(
-                        hintText: 'Title',
+                        hintText: 'What was this spend for?',
                       ),
                       controller: _titleController,
                       onSubmitted: (_) => _submitData(),
@@ -172,7 +139,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     width: MediaQuery.of(context).size.width - 20,
                     child: TextField(
                       style: TextStyle(fontSize: 18),
-                      decoration: InputDecoration(hintText: 'Amount'),
+                      decoration: InputDecoration(hintText: 'Enter Amount'),
                       controller: _amountController,
                       keyboardType: TextInputType.number,
                       onSubmitted: (_) => _submitData(),
@@ -288,7 +255,8 @@ class _NewTransactionState extends State<NewTransaction> {
                       ),
                     ),
                     style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius:BorderRadius.circular(10))),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
                       padding: MaterialStateProperty.all(EdgeInsets.all(13)),
                       elevation: MaterialStateProperty.all(10),
                       backgroundColor:

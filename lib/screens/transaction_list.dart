@@ -17,37 +17,52 @@ class TransactionList extends StatelessWidget {
       Icons.restaurant,
       color: Colors.orange[800],
     ),
-    'Transport': Icon(
-      Icons.train,
-      color:Colors.pink[300]
+    'Transport': Icon(Icons.train, color: Colors.pink[300]),
+    'Health': Icon(
+      Icons.healing,
+      color: Colors.orange[200],
     ),
-    'Health': Icon(Icons.healing,color: Colors.orange[200],),
     'Entertainment': Icon(
       Icons.attractions,
       color: Colors.limeAccent[400],
     ),
     'Fuel': Icon(
-      Icons.local_gas_station,color: Colors.yellow[800],
+      Icons.local_gas_station,
+      color: Colors.yellow[800],
     ),
-    'Bills': Icon(Icons.list_alt,color: Colors.lightGreen,),
-    'Fashion': Icon(Icons.dry_cleaning,color: Colors.blue[400]),
+    'Bills': Icon(
+      Icons.list_alt,
+      color: Colors.lightGreen,
+    ),
+    'Fashion': Icon(Icons.dry_cleaning, color: Colors.blue[400]),
     'Groceries': Icon(
       Icons.local_grocery_store,
       color: Colors.red,
     ),
     'Others': Icon(
       Icons.add_circle,
+      color: globals.themeColor[200],
     ),
   };
 
   void _alertDialog(BuildContext context, int index) {
     Alert(
+      style: AlertStyle(backgroundColor: globals.themeColor[100]),
       context: context,
       type: AlertType.warning,
       title: "Are u Sure?",
       desc: "This will permanently delete your transaction.",
       buttons: [
         DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.1, 0.7],
+            colors: [
+              Color(0xff90A4AE),
+              Color(0xff37474F),
+            ],
+          ),
           child: Text(
             "OK",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -59,15 +74,21 @@ class TransactionList extends StatelessWidget {
           color: Color.fromRGBO(0, 179, 134, 1.0),
         ),
         DialogButton(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.1, 0.7],
+            colors: [
+              //Sunkist
+              Color(0xff90A4AE),
+              Color(0xff37474F),
+            ],
+          ),
           child: Text(
             "CANCEL",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: () => Navigator.pop(context),
-          gradient: LinearGradient(colors: [
-            Color.fromRGBO(116, 116, 191, 1.0),
-            Color.fromRGBO(52, 138, 199, 1.0)
-          ]),
         )
       ],
     ).show();
@@ -76,7 +97,7 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450,
+      height: MediaQuery.of(context).size.height - 350,
       child: transactions.isEmpty
           ? Column(
               children: <Widget>[
@@ -96,6 +117,7 @@ class TransactionList extends StatelessWidget {
               ],
             )
           : ListView.builder(
+              physics: BouncingScrollPhysics(),
               itemBuilder: (ctx, index) {
                 return Card(
                   color: globals.themeColor[200],
@@ -104,8 +126,9 @@ class TransactionList extends StatelessWidget {
                     vertical: 8,
                     horizontal: 5,
                   ),
-                  child: ListTile( 
-                    contentPadding: EdgeInsets.symmetric(vertical:0,horizontal:5),
+                  child: ListTile(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 0, horizontal: 5),
                     leading: CircleAvatar(
                       backgroundColor: globals.themeColor[900],
                       radius: 30,
@@ -118,15 +141,15 @@ class TransactionList extends StatelessWidget {
                     ),
                     subtitle: Text(
                       '\₹${transactions[index].amount}',
-                      style:TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                      DateFormat.yMMMd().format(transactions[index].date),
-                      style:TextStyle(fontSize: 16),
-                    ),
+                          DateFormat.yMMMd().format(transactions[index].date),
+                          style: TextStyle(fontSize: 16),
+                        ),
                         IconButton(
                           iconSize: 35,
                           icon: Icon(Icons.delete),

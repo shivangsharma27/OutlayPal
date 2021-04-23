@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'global.dart' as globals;
 
 class ChartBar extends StatelessWidget {
   final String label;
@@ -9,45 +10,69 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        Container(
-          height: 20,
-          child: FittedBox(
-            child: Text('\$${spendingAmount.toStringAsFixed(0)}'),
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        SizedBox(
-          height: 4,
-        ),
-        Container(
-          height: 60,
-          width: 10,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.0),
-                  color: Color.fromRGBO(220, 220, 220, 1),
-                  borderRadius: BorderRadius.circular(10),
+        Expanded(
+          flex: 10,
+          child: Container(
+            height: 15,
+            child: Stack(
+              children: <Widget>[
+                FractionallySizedBox(
+                  widthFactor: spendingPctOfTotal,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: globals.themeColor[900],
+                      // border: Border.symmetric(
+                      //   horizontal: BorderSide(
+                      //     color: globals.themeColor[900],
+                      //     width: 2.0,
+                      //   ),
+                      // ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
-              ),
-              FractionallySizedBox(
-                heightFactor: spendingPctOfTotal,
-                child: Container(
+                Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    border: Border.all(
+                      color: globals.themeColor[900],
+                      width: 2.0,
+                    ),
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-        SizedBox(
-          height: 4,
+        Expanded(
+          flex: 4,
+          child: Container(
+            height: 20,
+            child: FittedBox(
+              child: Text(
+                '\₹${spendingAmount.toStringAsFixed(0)}',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
         ),
-        Text(label),
       ],
     );
   }
