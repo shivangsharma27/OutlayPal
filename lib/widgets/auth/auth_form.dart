@@ -46,6 +46,7 @@ class _AuthFormState extends State<AuthForm> {
         SizedBox(height:10),// for logo
         Card(
           elevation: 10,
+          color: globals.themeColor[100],
           margin: EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: Padding(
