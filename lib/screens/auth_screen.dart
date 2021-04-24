@@ -9,6 +9,7 @@ import 'package:OutlayPlanner/widgets/auth/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../backend/firestore.dart';
 import '../widgets/global.dart' as globals;
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -42,17 +43,69 @@ class _AuthScreenState extends State<AuthScreen> {
           email: email,
           password: password,
         );
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(authResult.user.uid)
-            .set({
-          'username': username,
-          'email': email,
-        });
-        await FirebaseFirestore.instance
-            .collection('Transactions')
-            .doc(email)
-            .set({});
+        authResult.user.sendEmailVerification();
+        Alert(
+          style: AlertStyle(backgroundColor: globals.themeColor[100]),
+          context: context,
+          type: AlertType.info,
+          onWillPopActive: true,
+          title: "Please verify your Email",
+          desc: "Click on the link sent at $email",
+          closeFunction: () async {
+            try {
+              await FirebaseAuth.instance.currentUser.delete();
+              showSnackBar("Previous sign up attempt cancelled", context);
+            } on FirebaseAuthException catch (error) {
+              if (error.code == 'requires-recent-login') {
+                print(
+                    'The user must reauthenticate before this operation can be executed.');
+              }
+              showSnackBar(error.message, context);
+            } finally {
+              Navigator.pop(context);
+              setState(() {
+                _isLoading = false;
+              });
+            }
+          },
+          buttons: [
+            DialogButton(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [0.1, 0.7],
+                colors: [
+                  Color(0xff90A4AE),
+                  Color(0xff37474F),
+                ],
+              ),
+              child: Text(
+                "Confirm",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () async {
+                await _auth.currentUser.reload();
+                if (_auth.currentUser.emailVerified) {
+                  await FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(authResult.user.uid)
+                      .set({
+                    'username': username,
+                    'email': email,
+                  });
+                  await FirebaseFirestore.instance
+                      .collection('Transactions')
+                      .doc(email)
+                      .set({});
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage()));
+                }
+                
+              },
+              color: Color.fromRGBO(0, 179, 134, 1.0),
+            ),
+          ],
+        ).show();
       }
     } on PlatformException catch (err) {
       var message = 'An error occurred, please check your credentials!';

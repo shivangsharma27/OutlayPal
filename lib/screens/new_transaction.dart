@@ -20,17 +20,24 @@ class _NewTransactionState extends State<NewTransaction> {
   String _selectedCategory = '';
 
   void _submitData() {
-    if (_amountController.text.isEmpty) {
-      globals.showSnackBar(context);
-      return;
-    }
+    // if (_amountController.text.isEmpty) {
+    //   globals.showSnackBar('One or more fields are empty !',context);
+    //   return;
+    // }
     final enteredTitle = _titleController.text;
-    final enteredAmount = double.parse(_amountController.text);
+    double enteredAmount;
+
     if (enteredTitle.isEmpty ||
-        enteredAmount <= 0 ||
+        _amountController.text.isEmpty ||
         _selectedDate == null ||
         _category == null) {
-         globals.showSnackBar(context);
+      globals.showSnackBar('One or more fields are empty !', context);
+      return;
+    }
+    if (RegExp("^[0-9]+(\.[0-9]{2}){0,1}\$").hasMatch(_amountController.text)) {
+      enteredAmount = double.parse(_amountController.text);
+    } else {
+      globals.showSnackBar('Please enter a valid amount.', context);
       return;
     }
 
@@ -190,7 +197,7 @@ class _NewTransactionState extends State<NewTransaction> {
                       ),
                       height: MediaQuery.of(context).size.height / 2.7,
                       child: GridView.count(
-                        dragStartBehavior: DragStartBehavior.start ,
+                        dragStartBehavior: DragStartBehavior.start,
                         crossAxisCount: 4,
                         children: List.generate(9, (index) {
                           return Column(
@@ -275,7 +282,7 @@ class _NewTransactionState extends State<NewTransaction> {
                       backgroundColor:
                           MaterialStateProperty.all(globals.themeColor[900]),
                     ),
-                    onPressed:_submitData,
+                    onPressed: _submitData,
                   ),
                 ],
               ),

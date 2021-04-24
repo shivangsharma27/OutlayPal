@@ -54,10 +54,12 @@ class MyApp extends StatelessWidget {
             )),
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (ctx, userSnapshot) {
-              if (FirebaseAuth.instance.currentUser != null) {
-                currUserEmail = FirebaseAuth.instance.currentUser.email;
-                return MyHomePage();
+            builder: (ctx, userSnapshot){
+              if (FirebaseAuth.instance.currentUser != null && globals.login == true) {
+                
+                  currUserEmail = FirebaseAuth.instance.currentUser.email;
+                  return MyHomePage();
+                
               } else {
                 return AuthScreen();
               }
@@ -128,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // void _getUserTransaction()
-  
+
   Map<String, double> get _categoryTransactions {
     Map<String, double> dataMap = {};
     for (var itr in userTransactions) {
@@ -193,7 +195,9 @@ class _MyHomePageState extends State<MyHomePage> {
       builder: (_) {
         return GestureDetector(
           onTap: () {},
-          child: Container(child: LineCharts(_recentMonthlyTransactions),),
+          child: Container(
+            child: LineCharts(_recentMonthlyTransactions),
+          ),
           behavior: HitTestBehavior.opaque,
         );
       },
@@ -254,17 +258,16 @@ class _MyHomePageState extends State<MyHomePage> {
       desc: "You will be signed out.",
       buttons: [
         DialogButton(
-        gradient:LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      stops: [0.1,0.7],
-      colors: [
-        //Sunkist
-        Color(0xff90A4AE),
-        Color(0xff37474F),
-        
-      ],
-    ),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.1, 0.7],
+            colors: [
+              //Sunkist
+              Color(0xff90A4AE),
+              Color(0xff37474F),
+            ],
+          ),
           child: Text(
             "YES",
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -282,16 +285,14 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           onPressed: () => Navigator.pop(context),
           gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      stops: [0.1,0.7],
-      colors: [
-        
-        Color(0xff90A4AE),
-        Color(0xff37474F),
-        
-      ],
-    ),
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.1, 0.7],
+            colors: [
+              Color(0xff90A4AE),
+              Color(0xff37474F),
+            ],
+          ),
         )
       ],
     ).show();

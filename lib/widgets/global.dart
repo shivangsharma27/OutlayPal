@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+bool login = true;
 Map<int, Color> themeColor = {
   50: Colors.blueGrey[50],
   100: Colors.blueGrey[100],
@@ -48,13 +49,13 @@ BoxDecoration getGradient() {
   );
 }
 
-void showSnackBar(BuildContext context) {
+void showSnackBar(String text, BuildContext context) {
   ScaffoldMessenger.of(context).showSnackBar(
     new SnackBar(backgroundColor: themeColor[900],
      // padding: EdgeInsets.symmetric(v),
       elevation: 4,
       duration: Duration(seconds: 3),
-      content: Text('One or more fields are empty !',style: TextStyle(fontSize:14),),
+      content: Text(text,style: TextStyle(fontSize:14),),
       shape: RoundedRectangleBorder(
           side: BorderSide.none, borderRadius: BorderRadius.circular(8.0)),
       behavior: SnackBarBehavior.floating,

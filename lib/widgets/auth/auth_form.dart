@@ -131,6 +131,7 @@ class _AuthFormState extends State<AuthForm> {
                         onPressed: () {
                           setState(() {
                             _isLogin = !_isLogin;
+                            globals.login = !globals.login;
                           });
                         },
                       ),

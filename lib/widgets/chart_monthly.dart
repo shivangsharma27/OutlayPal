@@ -87,7 +87,7 @@ class LineCharts extends StatelessWidget {
           flex: 1,
         ),
         Expanded(
-          flex: 13,
+          flex: 11,
           child: Card(
             color: globals.themeColor[200],
             margin: EdgeInsets.fromLTRB(10, 0, 10, 10),

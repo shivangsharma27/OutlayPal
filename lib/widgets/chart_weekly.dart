@@ -56,7 +56,7 @@ class Chart extends StatelessWidget {
           flex: 1,
         ),
         Expanded(
-          flex: 13,
+          flex: 11,
           child: Card(
             color: globals.themeColor[200],
             elevation: 6,
