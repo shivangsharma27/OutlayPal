@@ -333,7 +333,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               primary: globals.themeColor[100],
                             ),
                             child: Text(
-                              "Weekly",
+                              "Daily",
                               style:
                                   TextStyle(fontSize: 16, color: Colors.black),
                             ),

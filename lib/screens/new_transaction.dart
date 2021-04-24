@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../widgets/global.dart' as globals;
@@ -20,15 +21,16 @@ class _NewTransactionState extends State<NewTransaction> {
 
   void _submitData() {
     if (_amountController.text.isEmpty) {
+      globals.showSnackBar(context);
       return;
     }
     final enteredTitle = _titleController.text;
     final enteredAmount = double.parse(_amountController.text);
-
     if (enteredTitle.isEmpty ||
         enteredAmount <= 0 ||
         _selectedDate == null ||
         _category == null) {
+         globals.showSnackBar(context);
       return;
     }
 
@@ -63,7 +65,13 @@ class _NewTransactionState extends State<NewTransaction> {
       'Icon': Icon(Icons.local_grocery_store, color: Colors.red),
       'name': 'Groceries'
     },
-    {'Icon': Icon(Icons.add_circle,color: globals.themeColor[200],), 'name': 'Others'},
+    {
+      'Icon': Icon(
+        Icons.add_circle,
+        color: globals.themeColor[200],
+      ),
+      'name': 'Others'
+    },
   ];
 
   void _presentDatePicker() {
@@ -177,10 +185,12 @@ class _NewTransactionState extends State<NewTransaction> {
                           ]),
                       width: MediaQuery.of(context).size.width - 20,
                       alignment: Alignment.center,
-                      padding:
-                          EdgeInsets.symmetric(vertical: 10,),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 10,
+                      ),
                       height: MediaQuery.of(context).size.height / 2.7,
                       child: GridView.count(
+                        dragStartBehavior: DragStartBehavior.start ,
                         crossAxisCount: 4,
                         children: List.generate(9, (index) {
                           return Column(
@@ -202,7 +212,10 @@ class _NewTransactionState extends State<NewTransaction> {
                                     },
                                     icon: icons[index]['Icon']),
                               ),
-                              Text(icons[index]['name'], style: TextStyle(fontSize : 12),),
+                              Text(
+                                icons[index]['name'],
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           );
                         }),
@@ -262,7 +275,7 @@ class _NewTransactionState extends State<NewTransaction> {
                       backgroundColor:
                           MaterialStateProperty.all(globals.themeColor[900]),
                     ),
-                    onPressed: _submitData,
+                    onPressed:_submitData,
                   ),
                 ],
               ),

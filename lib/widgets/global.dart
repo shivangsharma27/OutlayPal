@@ -1,5 +1,7 @@
 library my_prj.globals;
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 Map<int, Color> themeColor = {
@@ -13,7 +15,7 @@ Map<int, Color> themeColor = {
   700: Colors.blueGrey[700],
   800: Colors.blueGrey[800],
   900: Colors.blueGrey[900]
-};//263238
+}; //263238
 // Map<int, Color> themeColor = {
 //   50: Colors.lime[50],
 //   100: Colors.lime[100],
@@ -36,13 +38,26 @@ BoxDecoration getGradient() {
     gradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      stops: [0.2,0.7],
+      stops: [0.2, 0.7],
       colors: [
         //Sunkist
         Color(0xff90A4AE),
         Color(0xff37474F),
-        
       ],
+    ),
+  );
+}
+
+void showSnackBar(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    new SnackBar(backgroundColor: themeColor[900],
+     // padding: EdgeInsets.symmetric(v),
+      elevation: 4,
+      duration: Duration(seconds: 3),
+      content: Text('One or more fields are empty !',style: TextStyle(fontSize:14),),
+      shape: RoundedRectangleBorder(
+          side: BorderSide.none, borderRadius: BorderRadius.circular(8.0)),
+      behavior: SnackBarBehavior.floating,
     ),
   );
 }

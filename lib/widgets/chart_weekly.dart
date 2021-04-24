@@ -40,28 +40,48 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-       color: globals.themeColor[200],
-      elevation: 6,
-      margin: EdgeInsets.all(10),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: groupedTransactionValues.map((data) {
-            return Flexible(
-              fit: FlexFit.tight,
-              child: ChartBar(
-                data['day'],
-                data['amount'],
-                totalSpending == 0.0
-                    ? 0.0
-                    : (data['amount'] as double) / totalSpending,
-              ),
-            );
-          }).toList(),
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+              child: Container(
+                 margin: EdgeInsets.symmetric(vertical:4),
+                color: globals.themeColor[900],
+                padding: EdgeInsets.symmetric(horizontal:10,vertical:3),
+                child: Text(
+            'Day-Wise distribution',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold,color: globals.themeColor[100]),
+          ),
+              )),
+          flex: 1,
         ),
-      ),
+        Expanded(
+          flex: 13,
+          child: Card(
+            color: globals.themeColor[200],
+            elevation: 6,
+            margin: EdgeInsets.fromLTRB(10,0,10,10),
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: groupedTransactionValues.map((data) {
+                  return Flexible(
+                    fit: FlexFit.tight,
+                    child: ChartBar(
+                      data['day'],
+                      data['amount'],
+                      totalSpending == 0.0
+                          ? 0.0
+                          : (data['amount'] as double) / totalSpending,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

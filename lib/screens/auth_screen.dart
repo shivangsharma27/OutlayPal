@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:OutlayPlanner/widgets/auth/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../backend/firestore.dart';
+import '../widgets/global.dart' as globals;
 
 class AuthScreen extends StatefulWidget {
-  
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
@@ -60,11 +60,13 @@ class _AuthScreenState extends State<AuthScreen> {
       if (err.message != null) {
         message = err.message;
       }
-
       ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
-          content: Text(message),
-          backgroundColor: Theme.of(ctx).errorColor,
+          content: Text(
+            message,
+            style: TextStyle(color: globals.themeColor[200]),
+          ),
+          backgroundColor: globals.themeColor[900],
         ),
       );
       setState(() {
@@ -72,6 +74,16 @@ class _AuthScreenState extends State<AuthScreen> {
       });
     } catch (err) {
       print(err);
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            'An error occurred, please check your credentials!',
+            style: TextStyle(color: globals.themeColor[900]),
+          ),
+          backgroundColor: globals.themeColor[200],
+        ),
+      );
       setState(() {
         _isLoading = false;
       });
