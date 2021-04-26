@@ -61,7 +61,11 @@ class Chart extends StatelessWidget {
             color: globals.themeColor[200],
             elevation: 6,
             margin: EdgeInsets.fromLTRB(10,0,10,10),
-            child: Padding(
+            child:  (recentTransactions.isEmpty)
+              ? Center(
+                  child: Text('No transactions added yet!'),
+                )
+              : Padding(
               padding: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

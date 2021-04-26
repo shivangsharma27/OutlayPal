@@ -89,102 +89,107 @@ class LineCharts extends StatelessWidget {
         Expanded(
           flex: 11,
           child: Card(
-            color: globals.themeColor[200],
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
-            child: charts.BarChart(
-              _createSampleData(),
-              animate: false,
+                  color: globals.themeColor[200],
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                  child: (recentMonthlyTransactions.isEmpty)
+              ? Center(
+                  child: Text('No transactions added yet!'),
+                )
+              : charts.BarChart(
+                    _createSampleData(),
+                    animate: false,
 
-              //animationDuration: Duration(seconds:2),
-              primaryMeasureAxis: new charts.NumericAxisSpec(
-                tickProviderSpec: new charts
-                    .StaticNumericTickProviderSpec(<charts.TickSpec<num>>[
-                  charts.TickSpec<num>(0),
-                  charts.TickSpec<num>(20),
-                  charts.TickSpec<num>(40),
-                  charts.TickSpec<num>(60),
-                  charts.TickSpec<num>(80),
-                  charts.TickSpec<num>(100),
-                ]),
-                //renderSpec: new charts.NoneRenderSpec(), //GridlineRendererSpec(
-                // Display the measure axis labels below the gridline.
-                //
-                // 'Before' & 'after' follow the axis value direction.
-                // Vertical axes draw 'before' below & 'after' above the tick.
-                // Horizontal axes draw 'before' left & 'after' right the tick.
-                //labelAnchor: charts.TickLabelAnchor.before,
-                // Left justify the text in the axis.
-                //
-                // Note: outside means that the secondary measure axis would right
-                // justify.
-                //labelJustification: charts.TickLabelJustification.outside,
-              ),
-              // primaryMeasureAxis: new charts.NumericAxisSpec(
-              //     showAxisLine: true,
-              //     viewport: new charts.NumericExtents(
-              //       groupedTransactionValues[groupedTransactionValues.length - 1]
-              //           ['month'],
-              //       6),
+                    //animationDuration: Duration(seconds:2),
+                    primaryMeasureAxis: new charts.NumericAxisSpec(
+                      tickProviderSpec: new charts
+                          .StaticNumericTickProviderSpec(<charts.TickSpec<num>>[
+                        charts.TickSpec<num>(0),
+                        charts.TickSpec<num>(20),
+                        charts.TickSpec<num>(40),
+                        charts.TickSpec<num>(60),
+                        charts.TickSpec<num>(80),
+                        charts.TickSpec<num>(100),
+                      ]),
+                      //renderSpec: new charts.NoneRenderSpec(), //GridlineRendererSpec(
+                      // Display the measure axis labels below the gridline.
+                      //
+                      // 'Before' & 'after' follow the axis value direction.
+                      // Vertical axes draw 'before' below & 'after' above the tick.
+                      // Horizontal axes draw 'before' left & 'after' right the tick.
+                      //labelAnchor: charts.TickLabelAnchor.before,
+                      // Left justify the text in the axis.
+                      //
+                      // Note: outside means that the secondary measure axis would right
+                      // justify.
+                      //labelJustification: charts.TickLabelJustification.outside,
+                    ),
+                    // primaryMeasureAxis: new charts.NumericAxisSpec(
+                    //     showAxisLine: true,
+                    //     viewport: new charts.NumericExtents(
+                    //       groupedTransactionValues[groupedTransactionValues.length - 1]
+                    //           ['month'],
+                    //       6),
 
-              //     renderSpec: new charts.GridlineRendererSpec(
-              //       labelStyle: new charts.TextStyleSpec(
-              //           fontSize: 18, // size in Pts.
-              //           color: charts.MaterialPalette.black),
+                    //     renderSpec: new charts.GridlineRendererSpec(
+                    //       labelStyle: new charts.TextStyleSpec(
+                    //           fontSize: 18, // size in Pts.
+                    //           color: charts.MaterialPalette.black),
 
-              //       // Change the line colors to match text color.
-              //       lineStyle:
-              //           new charts.LineStyleSpec(color: charts.MaterialPalette.black),
-              //     )),
-              domainAxis: new charts.OrdinalAxisSpec(
-                renderSpec: charts.SmallTickRendererSpec(
-                  labelStyle: charts.TextStyleSpec(
-                    fontSize: 14,
-                    color: charts.MaterialPalette.black,
+                    //       // Change the line colors to match text color.
+                    //       lineStyle:
+                    //           new charts.LineStyleSpec(color: charts.MaterialPalette.black),
+                    //     )),
+                    domainAxis: new charts.OrdinalAxisSpec(
+                      renderSpec: charts.SmallTickRendererSpec(
+                        labelStyle: charts.TextStyleSpec(
+                          fontSize: 14,
+                          color: charts.MaterialPalette.black,
+                        ),
+                      ),
+                      viewport: new charts.OrdinalViewport(
+                          groupedTransactionValues[
+                              groupedTransactionValues.length - 1]['month'],
+                          4),
+                    ),
+                    behaviors: [
+                      new charts.ChartTitle(
+                        'Outlay Percentage(%)',
+                        behaviorPosition: charts.BehaviorPosition.start,
+                        titleOutsideJustification:
+                            charts.OutsideJustification.middle,
+                        innerPadding: 3,
+                        titleStyleSpec: charts.TextStyleSpec(
+                            color: charts.MaterialPalette.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold.toString()),
+                      ),
+                      // Adding this behavior will allow tapping a bar to center it in the viewport
+                      new charts.SlidingViewport(
+                        charts.SelectionModelType.action,
+                      ),
+                      new charts.PanBehavior(),
+                    ],
+                    // defaultRenderer: new charts.BarRendererConfig(
+                    // groupingType: charts.BarGroupingType.stacked, strokeWidthPx: 3.0),
+                    defaultRenderer: new charts.BarRendererConfig(
+                      barRendererDecorator: new charts.BarLabelDecorator(
+                          labelPosition: charts.BarLabelPosition.auto,
+                          labelPadding: 15,
+                          labelAnchor: charts.BarLabelAnchor.end,
+                          insideLabelStyleSpec: charts.TextStyleSpec(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold.toString(),
+                            color: charts.MaterialPalette.white,
+                          ),
+                          outsideLabelStyleSpec: charts.TextStyleSpec(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold.toString(),
+                            color: charts.MaterialPalette.black,
+                          )),
+                      cornerStrategy: const charts.ConstCornerStrategy(20),
+                    ),
                   ),
                 ),
-                viewport: new charts.OrdinalViewport(
-                    groupedTransactionValues[
-                        groupedTransactionValues.length - 1]['month'],
-                    4),
-              ),
-              behaviors: [
-                new charts.ChartTitle(
-                  'Outlay Percentage(%)',
-                  behaviorPosition: charts.BehaviorPosition.start,
-                  titleOutsideJustification: charts.OutsideJustification.middle,
-                  innerPadding: 3,
-                  titleStyleSpec: charts.TextStyleSpec(
-                      color: charts.MaterialPalette.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold.toString()),
-                ),
-                // Adding this behavior will allow tapping a bar to center it in the viewport
-                new charts.SlidingViewport(
-                  charts.SelectionModelType.action,
-                ),
-                new charts.PanBehavior(),
-              ],
-              // defaultRenderer: new charts.BarRendererConfig(
-              // groupingType: charts.BarGroupingType.stacked, strokeWidthPx: 3.0),
-              defaultRenderer: new charts.BarRendererConfig(
-                barRendererDecorator: new charts.BarLabelDecorator(
-                    labelPosition: charts.BarLabelPosition.auto,
-                    labelPadding: 15,
-                    labelAnchor: charts.BarLabelAnchor.end,
-                    insideLabelStyleSpec: charts.TextStyleSpec(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold.toString(),
-                      color: charts.MaterialPalette.white,
-                    ),
-                    outsideLabelStyleSpec: charts.TextStyleSpec(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold.toString(),
-                      color: charts.MaterialPalette.black,
-                    )),
-                cornerStrategy: const charts.ConstCornerStrategy(20),
-              ),
-            ),
-          ),
         ),
       ],
     );
