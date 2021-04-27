@@ -103,7 +103,9 @@ class _NewTransactionState extends State<NewTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('OutlayPlanner'),
+        centerTitle: true,
+        title: Image.asset('assets/images/logo.png',width: 190,height: 45,),
+        
       ),
       body: SafeArea(
         child: SingleChildScrollView(

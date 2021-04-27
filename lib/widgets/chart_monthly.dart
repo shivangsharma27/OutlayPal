@@ -98,8 +98,6 @@ class LineCharts extends StatelessWidget {
               : charts.BarChart(
                     _createSampleData(),
                     animate: false,
-
-                    //animationDuration: Duration(seconds:2),
                     primaryMeasureAxis: new charts.NumericAxisSpec(
                       tickProviderSpec: new charts
                           .StaticNumericTickProviderSpec(<charts.TickSpec<num>>[
@@ -110,6 +108,7 @@ class LineCharts extends StatelessWidget {
                         charts.TickSpec<num>(80),
                         charts.TickSpec<num>(100),
                       ]),
+                      ),
                       //renderSpec: new charts.NoneRenderSpec(), //GridlineRendererSpec(
                       // Display the measure axis labels below the gridline.
                       //
@@ -122,7 +121,7 @@ class LineCharts extends StatelessWidget {
                       // Note: outside means that the secondary measure axis would right
                       // justify.
                       //labelJustification: charts.TickLabelJustification.outside,
-                    ),
+                    
                     // primaryMeasureAxis: new charts.NumericAxisSpec(
                     //     showAxisLine: true,
                     //     viewport: new charts.NumericExtents(

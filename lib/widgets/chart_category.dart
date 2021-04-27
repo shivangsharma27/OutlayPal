@@ -1,4 +1,4 @@
-import 'package:OutlayPlanner/models/transaction.dart';
+import '../models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'global.dart' as globals;

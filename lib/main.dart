@@ -1,4 +1,4 @@
-import 'package:OutlayPlanner/widgets/chart_category.dart';
+import './widgets/chart_category.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -54,12 +54,11 @@ class MyApp extends StatelessWidget {
             )),
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (ctx, userSnapshot){
-              if (FirebaseAuth.instance.currentUser != null && globals.login == true) {
-                
-                  currUserEmail = FirebaseAuth.instance.currentUser.email;
-                  return MyHomePage();
-                
+            builder: (ctx, userSnapshot) {
+              if (FirebaseAuth.instance.currentUser != null &&
+                  globals.login == true) {
+                currUserEmail = FirebaseAuth.instance.currentUser.email;
+                return MyHomePage();
               } else {
                 return AuthScreen();
               }
@@ -302,9 +301,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'OutlayPlanner',
-        ),
+        centerTitle: true,
+        title: Image.asset('assets/images/logo.png',width: 190,height: 45,), //Text(
+        //   'OutlayPlanner',
+        // ),
         actions: [
           IconButton(
               icon: Icon(Icons.account_circle_sharp),

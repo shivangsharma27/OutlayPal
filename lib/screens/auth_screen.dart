@@ -1,11 +1,11 @@
-import 'package:OutlayPlanner/main.dart';
-import 'package:OutlayPlanner/widgets/global.dart';
+import '../main.dart';
+import '../widgets/global.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 
-import 'package:OutlayPlanner/widgets/auth/auth_form.dart';
+import '../widgets/auth/auth_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import '../backend/firestore.dart';
 import '../widgets/global.dart' as globals;
@@ -98,9 +98,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       .doc(email)
                       .set({});
                   Navigator.pop(context);
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MyHomePage()));
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()));
                 }
-                
               },
               color: Color.fromRGBO(0, 179, 134, 1.0),
             ),
@@ -145,14 +145,20 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: getGradient(),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: AuthForm(
-          _submitAuthForm,
-          _isLoading,
-        ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Image.asset('assets/images/background.jpg',fit: BoxFit.cover,),
+          ),
+          AuthForm(
+            _submitAuthForm,
+            _isLoading,
+          ),
+        ],
       ),
     );
   }
