@@ -1,3 +1,5 @@
+import 'package:OutlayPal/screens/user_profile.dart';
+
 import './widgets/chart_category.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,28 +32,29 @@ class MyApp extends StatelessWidget {
         title: 'Personal Expenses',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-            primarySwatch: MaterialColor(0xff263238, globals.themeColor),
-            primaryColor: globals.themeColor[900],
-            // accentColor: Colors.purple,
-            canvasColor: globals.themeColor[500],
-            fontFamily: 'Quicksand',
+          primarySwatch: MaterialColor(0xff263238, globals.themeColor),
+          primaryColor: globals.themeColor[900],
+          // accentColor: Colors.purple,
+          canvasColor: globals.themeColor[500],
+          fontFamily: 'Quicksand',
+          textTheme: ThemeData.light().textTheme.copyWith(
+                title: TextStyle(
+                  fontFamily: 'OpenSans',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+                button: TextStyle(color: Colors.white),
+              ),
+          appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
                   title: TextStyle(
                     fontFamily: 'OpenSans',
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    fontSize: 18,
                   ),
-                  button: TextStyle(color: Colors.white),
                 ),
-            appBarTheme: AppBarTheme(
-              textTheme: ThemeData.light().textTheme.copyWith(
-                    title: TextStyle(
-                      fontFamily: 'OpenSans',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-            )),
+          ),
+        ),
         home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (ctx, userSnapshot) {
@@ -64,16 +67,13 @@ class MyApp extends StatelessWidget {
               }
             })
         // (FirebaseAuth.instance.currentUser != null)? MyHomePage() : AuthScreen()
-
         );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   // List<Transaction> userTransactions;
-
   // MyHomePage(this.userTransactions);
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -235,6 +235,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // );
   }
 
+  void _showUserProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            User_profile(currUserEmail, _recentMonthlyTransactions),
+      ),
+    );
+  }
+
   void stat() {
     setState(() {});
   }
@@ -248,68 +258,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _alertDialog(BuildContext context) {
-    Alert(
-      context: context,
-      type: AlertType.warning,
-      style: AlertStyle(backgroundColor: globals.themeColor[100]),
-      title: "Are u Sure?",
-      desc: "You will be signed out.",
-      buttons: [
-        DialogButton(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0.1, 0.7],
-            colors: [
-              //Sunkist
-              Color(0xff90A4AE),
-              Color(0xff37474F),
-            ],
-          ),
-          child: Text(
-            "YES",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () {
-            userTransactions = [];
-            FirebaseAuth.instance.signOut();
-            Navigator.pop(context);
-          },
-        ),
-        DialogButton(
-          child: Text(
-            "CANCEL",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () => Navigator.pop(context),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: [0.1, 0.7],
-            colors: [
-              Color(0xff90A4AE),
-              Color(0xff37474F),
-            ],
-          ),
-        )
-      ],
-    ).show();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('assets/images/logo.png',width: 190,height: 45,), //Text(
+        title: Image.asset(
+          'assets/images/logo.png',
+          width: 190,
+          height: 45,
+        ), //Text(
         //   'OutlayPlanner',
         // ),
         actions: [
           IconButton(
-              icon: Icon(Icons.account_circle_sharp),
-              iconSize: 35,
-              onPressed: () => _alertDialog(context)),
+            icon: Icon(Icons.account_circle_sharp),
+            iconSize: 35,
+            onPressed: () => _showUserProfile(context),
+          ),
         ],
       ),
       body: isLoading

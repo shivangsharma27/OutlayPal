@@ -83,12 +83,19 @@ class _NewTransactionState extends State<NewTransaction> {
 
   void _presentDatePicker() {
     showDatePicker(
-      initialEntryMode: DatePickerEntryMode.input,
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2019),
-      lastDate: DateTime.now(),
-    ).then((pickedDate) {
+        initialEntryMode: DatePickerEntryMode.input,
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2019),
+        lastDate: DateTime.now(),
+        // builder: (BuildContext context, Widget child) {
+        //   return Container(  //wraps up the picker into container that is the whole page..
+        //     margin:EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            
+        //     child: child,
+        //   );
+        // } for removing that render pixel overflow error...
+        ).then((pickedDate) {
       if (pickedDate == null) {
         return;
       }
@@ -104,8 +111,11 @@ class _NewTransactionState extends State<NewTransaction> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('assets/images/logo.png',width: 190,height: 45,),
-        
+        title: Image.asset(
+          'assets/images/logo.png',
+          width: 190,
+          height: 45,
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
