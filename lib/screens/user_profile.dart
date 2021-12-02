@@ -47,6 +47,7 @@ class User_profile extends StatelessWidget {
             userTransactions = [];
             FirebaseAuth.instance.signOut();
             Navigator.pop(context);
+            Navigator.pop(context);
           },
         ),
         DialogButton(
@@ -85,21 +86,47 @@ class User_profile extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         child: Column(
           children: [
-            IconButton(
-              icon: Icon(Icons.account_circle_sharp),
-              onPressed: () => {},
-              iconSize: 200,
+            SizedBox(
+              height: 40,
             ),
-            Text(
-              "User name:" + userName,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Image.asset(
+              "assets/images/user1.png",
+              width: MediaQuery.of(context).size.width * 0.5,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.08,
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: globals.themeColor[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "User Name : " + userName,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(
               height: 20,
             ),
-            Text(
-              "Total expenses this month:" + monthlyAmount.toString(),
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.height * 0.08,
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: globals.themeColor[200],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                "Total expenses this month (Rs) : " +
+                    monthlyAmount.toString(),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(
               height: 20,

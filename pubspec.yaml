@@ -28,6 +28,12 @@ dependencies:
   charts_flutter: ^0.10.0 
   rflutter_alert: ^2.0.2
   pie_chart: ^4.0.1
+
+dependency_overrides:
+  charts_flutter:
+    git:
+      url: https://github.com/google/charts
+      path: charts_flutter
   
 
 
